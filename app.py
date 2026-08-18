@@ -26,7 +26,6 @@ def init_db():
     db.close()
 
 
-# Receive data from ESP32
 @app.route("/", methods=["GET", "POST"])
 def home():
 
@@ -54,14 +53,11 @@ def home():
         db.commit()
         db.close()
 
-        print("Data stored:", data)
-
         return "Data received and stored", 200
 
     return render_template("index.html")
 
 
-# Return latest 50 readings
 @app.route("/data")
 def get_data():
 
@@ -75,13 +71,11 @@ def get_data():
     """)
 
     rows = cursor.fetchall()
-
     db.close()
 
     data = []
 
     for row in rows:
-
         data.append({
             "id": row[0],
             "soil": row[1],
@@ -93,5 +87,4 @@ def get_data():
     return jsonify(data)
 
 
-# Initialize database
 init_db()
