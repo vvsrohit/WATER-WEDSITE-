@@ -31,6 +31,7 @@ def init_db():
 def home():
 
     if request.method == "POST":
+
         data = request.get_json()
 
         soil = data["soil"]
@@ -74,11 +75,13 @@ def get_data():
     """)
 
     rows = cursor.fetchall()
+
     db.close()
 
     data = []
 
     for row in rows:
+
         data.append({
             "id": row[0],
             "soil": row[1],
@@ -90,6 +93,5 @@ def get_data():
     return jsonify(data)
 
 
+# Initialize database
 init_db()
-
-app.run(host="0.0.0.0", port=5000)
