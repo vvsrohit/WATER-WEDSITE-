@@ -87,4 +87,4 @@ def get_data():
     return jsonify(data)
 
 
-init_db()
+
