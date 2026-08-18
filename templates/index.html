@@ -1,0 +1,148 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ESP32 Sensor Dashboard</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            color: #222;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 50px auto;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 14px 18px;
+            text-align: center;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: #f8fafc;
+            font-weight: 600;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        .status {
+            margin-top: 15px;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>ESP32 Sensor Dashboard</h1>
+
+    <div class="table-container">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Soil</th>
+                    <th>Temperature (°C)</th>
+                    <th>Humidity (%)</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
+
+            <tbody id="data">
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="status">
+        Updating automatically every 5 seconds
+    </div>
+
+</div>
+
+<script>
+
+async function loadData() {
+
+    try {
+
+        const response = await fetch("/data");
+        const rows = await response.json();
+
+        const table = document.getElementById("data");
+
+        table.innerHTML = "";
+
+        rows.forEach(row => {
+
+            const tr = document.createElement("tr");
+
+            tr.innerHTML = `
+                <td>${row.id}</td>
+                <td>${row.soil}</td>
+                <td>${row.temperature}</td>
+                <td>${row.humidity}</td>
+                <td>${row.timestamp}</td>
+            `;
+
+            table.appendChild(tr);
+        });
+
+    } catch (error) {
+
+        console.error("Failed to load sensor data:", error);
+
+    }
+}
+
+loadData();
+
+setInterval(loadData, 5000);
+
+</script>
+
+</body>
+</html>
